@@ -14,7 +14,7 @@ import strSimilarity
 
 from keras.layers import Dense, Input, Lambda, Flatten, Convolution2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
-from keras.models import Sequential, Model, model_from_json
+from keras.models import Sequential, Model, load_model
 from keras import backend as K
 from keras.optimizers import RMSprop
 from PIL import Image, ImageDraw, ImageFont
@@ -120,13 +120,10 @@ def initialize_encoder(self):
     """Initialize encoder for translating images to features."""
 
     # Set locations of models, weights, and feature parameters
-    model_file = os.path.join(OUTPUT_DIR, dataset_type + '_cnn.json')
-    weight_file = os.path.join(OUTPUT_DIR, dataset_type + '_cnn.h5')
+    model_file = os.path.join(OUTPUT_DIR, dataset_type + '_model.h5')
 
     # Load model
-    with open(model_file) as f:
-        model = model_from_json(f.read())
-    model.load_weights(weight_file)
+    model = load_model(model_file)
 
     # Set up encoder to convert images to features
     encoder = self._tm.layers[2]
@@ -198,10 +195,7 @@ def create_output():
     model.fit([X1_train, X2_train], y_train, batch_size=8, nb_epoch=max_idx)
 
     # Save the NN
-    json_string = model.to_json()
-    model.save_weights(os.path.join(OUTPUT_DIR, dataset_type + '_cnn.h5'), overwrite=True)
-    with open(os.path.join(OUTPUT_DIR, dataset_type + '_cnn.json'), 'wb') as f:
-        f.write(json_string)
+    model.save(os.path.join(OUTPUT_DIR, dataset_type + '_model.h5'), overwrite=True)
 
     scores = [
         -x[0]
