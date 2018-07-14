@@ -48,17 +48,18 @@ else:
 def generate_imgs(strings, font_location, font_size, image_size, text_location):
     font = ImageFont.truetype(font_location, font_size)
 
-    str_imgs = []
-
-    for st in strings:
+    def _generate_img(string):
         # Create a single channel image of floats
         img1 = Image.new('F', image_size)
         dimg = ImageDraw.Draw(img1)
-        dimg.text(text_location, st.lower(), font=font)
-        
-        img1 = np.expand_dims(img1, axis=0)
+        dimg.text(text_location, string.lower(), font=font)
 
-        str_imgs.append(img1)
+        return np.expand_dims(img1, axis=0)
+
+    str_imgs = [
+        _generate_img(string=st)
+        for st in strings
+    ]
 
     return np.array(str_imgs, dtype=np.float32)
 
