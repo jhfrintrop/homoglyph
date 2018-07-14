@@ -136,8 +136,9 @@ def initialize_encoder(self):
 
     return encoder
 
-if not os.path.isfile(OUTPUT_FILE):
-    font_location = "Arial.ttf"
+
+def create_output():
+    font_location = 'Arial.ttf'
     font_size = 10
     image_size = (150, 12)
     text_location = (0, 0)
@@ -264,27 +265,30 @@ if not os.path.isfile(OUTPUT_FILE):
     with open(OUTPUT_FILE, 'w') as f:
         pickle.dump(results, f)
 
-with open(OUTPUT_FILE) as f:
-    results = pickle.load(f)
-#
-# Make Figures
-#
-fig = plt.figure()
-plt.plot(results['siamese']['fpr'], results['siamese']['tpr'], 'b',
-         label='Siamese CNN (AUC=%0.2f)' % results['siamese']['auc'])
-plt.plot(results['editdistance_vs']['fpr'], results['editdistance_vs']['tpr'], 'g',
-         label='Visual edit distance (AUC=%0.2f)' % results['editdistance_vs']['auc'])
-plt.plot(results['editdistance']['fpr'], results['editdistance']['tpr'], 'r',
-         label='Edit distance (AUC=%0.2f)' % results['editdistance']['auc'])
-plt.plot(results['editdistance_percent']['fpr'], results['editdistance_percent']['tpr'],
-         label='Percent edit distance (AUC=%0.2f)' % results['editdistance_percent']['auc'])
-plt.plot([0, 1], [0, 1], 'k', lw=3, linestyle='--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('{} - Receiver Operating Characteristic'.format(OUTPUT_NAME))
-plt.legend(loc="lower right")
-fig.savefig(IMAGE_FILE)
+
+def main():
+    if not os.path.isfile(OUTPUT_FILE):
+        create_output()
+
+    # Open results
+    with open(OUTPUT_FILE, 'rb') as f:
+        results = pickle.load(f)
+
+    # Make Figures
+    fig = plt.figure()
+    plt.plot(results['siamese']['fpr'], results['siamese']['tpr'], 'b', label='Siamese CNN (AUC={:0.2f})'.format(results['siamese']['auc']))
+    plt.plot(results['editdistance_vs']['fpr'], results['editdistance_vs']['tpr'], 'g', label='Visual edit distance (AUC={:0.2f})'.format(results['editdistance_vs']['auc']))
+    plt.plot(results['editdistance']['fpr'], results['editdistance']['tpr'], 'r', label='Edit distance (AUC={:0.2f})'.format(results['editdistance']['auc']))
+    plt.plot(results['editdistance_percent']['fpr'], results['editdistance_percent']['tpr'], label='Percent edit distance (AUC={:0.2f})'.format(results['editdistance_percent']['auc']))
+    plt.plot([0, 1], [0, 1], 'k', lw=3, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('{} - Receiver Operating Characteristic'.format(OUTPUT_NAME))
+    plt.legend(loc='lower right')
+    fig.savefig(IMAGE_FILE)
 
 
+if __name__ == '__main__':
+    main()
