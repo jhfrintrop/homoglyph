@@ -1,10 +1,15 @@
 """Sample code for siamese neural net for detecting spoofing attacks"""
-from __future__ import with_statement
+from __future__ import with_statement, print_function, division
 
 import matplotlib
 matplotlib.use('Agg')
 
-import cPickle as pickle
+try:
+    # Python 2
+    import cPickle as pickle
+except ImportError:
+    # Python 3
+    import pickle
 import editdistance
 import matplotlib.pyplot as plt
 import numpy as np
@@ -141,7 +146,8 @@ def create_output():
     text_location = (0, 0)
     max_epochs = 25
 
-    with open(INPUT_FILE) as f:
+    # Open training / validation / test data
+    with open(INPUT_FILE, 'rb') as f:
         data = pickle.load(f)
 
     if is_fast:
@@ -256,7 +262,8 @@ def create_output():
         },
     }
 
-    with open(OUTPUT_FILE, 'w') as f:
+    # Save results
+    with open(OUTPUT_FILE, 'wb') as f:
         pickle.dump(results, f)
 
 
