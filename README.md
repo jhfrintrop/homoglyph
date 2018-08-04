@@ -119,6 +119,29 @@ The `--test` mode drastically reduces the size of each dataset and the maximum n
 
 The `--fast` mode also reduces the size of each dataset and the max. epochs but not as much. It is used to get faster but worse results than a full training.
 
+For example use the following to train domain names for test purposes:
+
+```
+$ python cli.py train Arial.ttf data\domain.pkl model.zip --test
+Using TensorFlow backend.
+TEST, reducing data and max. epochs
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+I C:\tf_jenkins\workspace\rel-win\M\windows\PY\36\tensorflow\core\platform\cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX AVX2
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+Using TensorFlow backend.
+```
+
+The `Using TensorFlow backend.` and `I C:\tf_jenkins\workspace\rel-win\M\windows\PY\36\tensorflow\core\platform\cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX AVX2` messages are only informational messages and might vary.
+
 
 #### Retrain
 
@@ -155,7 +178,7 @@ googIe.com ~ google.com = 0.05477425083518028
 facebook.com ~ google.com = 0.8001943230628967
 ```
 
-The `Using TensorFlow backend.` and `I C:\tf_jenkins\workspace\rel-win\M\windows\PY\36\tensorflow\core\platform\cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX AVX2` messages are only informational messages printed and might vary.
+The `Using TensorFlow backend.` and `I C:\tf_jenkins\workspace\rel-win\M\windows\PY\36\tensorflow\core\platform\cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX AVX2` messages are only informational messages and might vary.
 
 They come from keras and tensorflow and can't be disabled unfortunately.
 
