@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from keras.layers import Dense, Input, Lambda, Flatten, Convolution2D, MaxPooling2D
+from keras.layers import Dense, Input, Lambda, Flatten, Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential, Model, model_from_json, load_model
 from keras import backend as K
@@ -74,14 +74,14 @@ class CNN(object):
 
         # TODO: UserWarning: Update your `Conv2D` call to the Keras 2 API: `Conv2D(128, (5, 5), input_shape=(12, 150, ...)`
         # https://github.com/keras-team/keras/wiki/Keras-2.0-release-notes#convolutional-layers
-        model.add(Convolution2D(128, 5, 5, input_shape=data_shape))
+        model.add(Conv2D(128, (5, 5), input_shape=data_shape))
         model.add(LeakyReLU(alpha=0.1))
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         # TODO: UserWarning: Update your `Conv2D` call to the Keras 2 API: `Conv2D(64, (3, 3))`
         # https://github.com/keras-team/keras/wiki/Keras-2.0-release-notes#convolutional-layers
-        model.add(Convolution2D(64, 3, 3))
+        model.add(Conv2D(64, (3, 3)))
         model.add(LeakyReLU(alpha=0.1))
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -99,7 +99,7 @@ class CNN(object):
 
         # TODO: UserWarning: Update your `Model` call to the Keras 2 API: `Model(inputs=[<tf.Tenso..., outputs=Tensor("la...)`
         # https://github.com/keras-team/keras/wiki/Keras-2.0-release-notes#models
-        model = Model(input=[input_a, input_b], output=distance)
+        model = Model(inputs=[input_a, input_b], outputs=distance)
 
         rms = RMSprop()
         model.compile(loss=cls._contrastive_loss, optimizer=rms)
