@@ -20,24 +20,13 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential, Model, model_from_json, load_model
 from keras import backend as K
 from keras.optimizers import RMSprop
-from PIL import Image, ImageDraw, ImageFont
 from sklearn.metrics import roc_curve, auc, roc_auc_score
 
+from homoglyph_cnn.generate_img import generate_img as _generate_img
 from homoglyph_cnn.Archive import Archive
 
 
 logger = logging.getLogger(__name__)
-
-
-def _generate_img(string: str, font_location: str, font_size: int, image_size: Tuple[int, int], text_location: Tuple[int, int]):
-    font = ImageFont.truetype(font_location, font_size)
-    img = Image.new('F', image_size)
-    dimg = ImageDraw.Draw(img)
-    dimg.text(text_location, string.lower(), font=font)
-
-    img = np.expand_dims(img, axis=0)
-
-    return img
 
 
 class CNN(object):
