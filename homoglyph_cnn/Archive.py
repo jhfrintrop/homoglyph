@@ -128,7 +128,7 @@ class Archive(object):
             cls._writers[version] = func
 
             if default:
-                logger.debug('Version %d ist new default', version)
+                logger.debug('Version %d is new default', version)
                 cls._default_version = version
 
             return func

@@ -41,11 +41,13 @@ class CNN(object):
     @staticmethod
     def _euclidean_distance(vects) -> float:
         x, y = vects
+
         return K.sqrt(K.sum(K.square(x - y) + np.random.rand() * 0.0001, axis=1, keepdims=True))
 
     @staticmethod
     def _eucl_dist_output_shape(shapes):
         shape1, shape2 = shapes
+
         return shape1[0], 1
 
     @staticmethod
@@ -55,7 +57,8 @@ class CNN(object):
         """
 
         margin = 1
-        return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)), axis=-1, keepdims=False)
+        x = y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0))
+        return K.mean(x, axis=-1, keepdims=False)
 
     @classmethod
     def _build_model(cls, data_shape: Tuple[int, int, int]) -> Model:
@@ -99,7 +102,8 @@ class CNN(object):
         if max_workers is None or max_workers <= 0:
             max_workers = os.cpu_count() or 1
 
-        generate_img = partial(_generate_img, font_location=self.font_location, font_size=self.font_size, image_size=self.image_size, text_location=self.text_location)
+        generate_img = partial(_generate_img, font_location=self.font_location, font_size=self.font_size,
+                               image_size=self.image_size, text_location=self.text_location)
 
         logger.debug('Generating images, %d worker processes', max_workers)
         t0 = time()
@@ -289,12 +293,14 @@ class CNN(object):
         if not self.model:
             raise RuntimeError('Model is not set. You must train or load a model to predict.')
 
+        verbose = 1 if verbose or logger.getEffectiveLevel() <= logging.DEBUG else 0
+
         X1, X2, _ = self._build_data(data=[
             i + (0,)
             for i in data
         ])
 
-        prediction = self.model.predict([X1, X2], verbose=1 if verbose else 0)
+        prediction = self.model.predict([X1, X2], verbose=verbose)
 
         return prediction
 
@@ -332,8 +338,8 @@ class CNN(object):
             self.model.save_weights(weights_h5_file, overwrite=True)
 
             logger.debug('Writing archive %s', filename)
-            a = Archive(filename=filename)
-            a.write(
+            archive = Archive(filename=filename)
+            archive.write(
                 version=1,
                 font_file=self.font_location,
                 model_file=model_json_file,
@@ -351,8 +357,8 @@ class CNN(object):
             self.model.save(model_h5_file, overwrite=True)
 
             logger.debug('Writing archive %s', filename)
-            a = Archive(filename=filename)
-            a.write(
+            archive = Archive(filename=filename)
+            archive.write(
                 version=2,
                 font_filename=self.font_location,
                 model_filename=model_h5_file,
@@ -386,7 +392,7 @@ class CNN(object):
 
     @classmethod
     @contextmanager
-    def _load_v1(cls, archive: Archive):
+    def _load_v1(cls, archive: Archive) -> 'CNN':
         _font_file, model_file, _weights_file, font_size, image_size, text_location = archive.read()
 
         with TemporaryDirectory() as temp_dir:
@@ -398,7 +404,8 @@ class CNN(object):
                 shutil.copyfileobj(fsrc=_font_file, fdst=f)
 
             logger.debug('Instantiating CNN')
-            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size, text_location=text_location)
+            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size,
+                      text_location=text_location)
 
             logger.debug('Loading model from json')
             cnn.model = model_from_json(model_file.read())
@@ -414,7 +421,7 @@ class CNN(object):
 
     @classmethod
     @contextmanager
-    def _load_v2(cls, archive: Archive):
+    def _load_v2(cls, archive: Archive) -> 'CNN':
         _font_file, _model_file, font_size, image_size, text_location = archive.read()
 
         with TemporaryDirectory() as temp_dir:
@@ -426,7 +433,8 @@ class CNN(object):
                 shutil.copyfileobj(fsrc=_font_file, fdst=f)
 
             logger.debug('Instantiating CNN')
-            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size, text_location=text_location)
+            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size,
+                      text_location=text_location)
 
             logger.debug('Copying model to %s', model_file_name)
             with open(model_file_name, 'wb') as f:
@@ -435,11 +443,10 @@ class CNN(object):
             logger.debug('Loading model from %s', model_file_name)
             cnn.model = load_model(model_file_name, custom_objects={'_contrastive_loss': cls._contrastive_loss})
 
-
             yield cnn
 
     @staticmethod
-    def print_figure(results, filename: str, dataset_type: str):
+    def print_figure(results: Dict[str, Any], filename: str, dataset_type: str):
         logger.debug('Printing figure to %s', filename)
         t0 = time()
 
