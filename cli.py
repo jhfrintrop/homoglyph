@@ -176,7 +176,12 @@ def cnn_archive_unpack(archive: str, output: str):
         f.extractall(path=output)
 
 
-if __name__ == '__main__':
+def main():
+    global cnn_group
     cnn_group = click.help_option()(cnn_group)
     cnn_group = click.version_option()(cnn_group)
     cnn_group(auto_envvar_prefix='CNN')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,10 +1,5 @@
-Keras==2.2.0
-tensorflow==1.5.0
-numpy
-matplotlib
-pillow
-scikit-learn
-h5py
-fontTools
-fasttld
-click
+flake8
+mypy
+pylint
+bandit
+-e .
