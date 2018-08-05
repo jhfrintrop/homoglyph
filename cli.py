@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -68,8 +69,8 @@ def cnn_train(font: str, data: str, archive: str, font_size: int, image_size: Tu
     import pickle
     import random
 
-    from CNN import CNN
-    from Archive import Archive
+    from homoglyph_cnn.CNN import CNN
+    from homoglyph_cnn.Archive import Archive
 
     with open(data, 'rb') as f:
         data = pickle.load(f)
@@ -107,7 +108,7 @@ def cnn_train(font: str, data: str, archive: str, font_size: int, image_size: Tu
 @click.argument('domains', type=click.STRING, required=False, nargs=-1)
 @click.option('--threshold', type=THRESHOLD, default=None, show_default=True, help='If given display only results where the prediction is lower or equal this threshold')
 def cnn_predict(model: str, domains: Tuple[str, ...], threshold: float):
-    from CNN import CNN
+    from homoglyph_cnn.CNN import CNN
 
     if not domains:
         domains = [
@@ -151,7 +152,7 @@ def cnn_archive_group():
 @click.option('--image-size', type=click.Tuple([click.INT, click.INT]), default=(150, 12), show_default=True, help='The size of the image')
 @click.option('--text-location', type=click.Tuple([click.INT, click.INT]), default=(0, 0), show_default=True, help='The starting location of the text')
 def cnn_archive_pack(archive: str, font: str, model: str, font_size: int, image_size: Tuple[int, int], text_location: Tuple[int, int]):
-    from Archive import Archive
+    from homoglyph_cnn.Archive import Archive
 
     archive = Archive(filename=archive)
 

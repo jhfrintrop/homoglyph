@@ -7,7 +7,7 @@ import shutil
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import contextmanager
 from functools import partial
-from tempfile import NamedTemporaryFile, TemporaryDirectory
+from tempfile import TemporaryDirectory
 from time import time
 from typing import Tuple, List, Dict, Any
 
@@ -23,7 +23,7 @@ from keras.optimizers import RMSprop
 from PIL import Image, ImageDraw, ImageFont
 from sklearn.metrics import roc_curve, auc, roc_auc_score
 
-from Archive import Archive
+from homoglyph_cnn.Archive import Archive
 
 
 logger = logging.getLogger(__name__)
