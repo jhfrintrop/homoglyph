@@ -1,7 +1,6 @@
-__pycache__/
-*.py[cod]
-*.zip
 .idea/
 *.egg-info/
 dist/
 *.sublime*
+.mypy_cache/
+*.zip
