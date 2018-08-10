@@ -441,7 +441,10 @@ class CNN(object):
                 shutil.copyfileobj(fsrc=_model_file, fdst=f)
 
             logger.debug('Loading model from %s', model_file_name)
-            cnn.model = load_model(model_file_name, custom_objects={'_contrastive_loss': cls._contrastive_loss})
+            cnn.model = load_model(model_file_name, custom_objects={
+                'contrastive_loss': cls._contrastive_loss,
+                '_contrastive_loss': cls._contrastive_loss,
+            })
 
             yield cnn
 
