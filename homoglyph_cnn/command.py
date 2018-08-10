@@ -31,10 +31,10 @@ class ThresholdParamType(click.ParamType):
         try:
             threshold = float(value)
         except ValueError as e:
-            raise click.BadParameter(f'Threshold must be a float greater than 0, was "{value}"')
+            self.fail(f'Threshold must be a float greater than 0, was "{value}"')
 
         if threshold <= 0:
-            raise click.BadParameter(f'Threshold must be greater than 0, was {value}')
+            self.fail(f'Threshold must be greater than 0, was {value}')
 
         return threshold
 
