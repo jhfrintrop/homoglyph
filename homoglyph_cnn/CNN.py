@@ -414,16 +414,16 @@ class CNN(object):
             with open(font_file_name, 'wb') as f:
                 shutil.copyfileobj(fsrc=_font_file, fdst=f)
 
+            logger.debug('Copying weights file to %s', weights_file_name)
+            with open(weights_file_name, 'wb') as f:
+                shutil.copyfileobj(fsrc=_weights_file, fdst=f)
+
             logger.debug('Instantiating CNN')
             cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size,
                       text_location=text_location)
 
             logger.debug('Loading model from json')
             cnn.model = model_from_json(model_file.read())
-
-            logger.debug('Copying weights file to %s', weights_file_name)
-            with open(weights_file_name, 'wb') as f:
-                shutil.copyfileobj(fsrc=_weights_file, fdst=f)
 
             logger.debug('Loading weights from %s', weights_file_name)
             cnn.model.load_weights(weights_file_name)
@@ -443,13 +443,13 @@ class CNN(object):
             with open(font_file_name, 'wb') as f:
                 shutil.copyfileobj(fsrc=_font_file, fdst=f)
 
-            logger.debug('Instantiating CNN')
-            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size,
-                      text_location=text_location)
-
             logger.debug('Copying model to %s', model_file_name)
             with open(model_file_name, 'wb') as f:
                 shutil.copyfileobj(fsrc=_model_file, fdst=f)
+
+            logger.debug('Instantiating CNN')
+            cnn = cls(font_location=font_file_name, font_size=font_size, image_size=image_size,
+                      text_location=text_location)
 
             logger.debug('Loading model from %s', model_file_name)
             cnn.model = load_model(model_file_name, custom_objects={
