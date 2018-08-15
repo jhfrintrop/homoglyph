@@ -21,6 +21,7 @@ from keras.models import Sequential, Model, model_from_json, load_model
 from keras import backend as K
 from keras.optimizers import RMSprop
 from sklearn.metrics import roc_curve, auc, roc_auc_score
+from tensorflow import Graph, Session
 
 from homoglyph_cnn.generate_img import generate_img as _generate_img
 from homoglyph_cnn.Archive import Archive
@@ -387,11 +388,18 @@ class CNN(object):
         if not loader:
             raise NotImplementedError(f'Unknown version {version:d}')
 
-        with loader(archive) as cnn:
-            t1 = time()
-            logger.debug('Loaded from archive %s, took %fs', filename, t1 - t0)
+        # Load with a new Graph and a new Session as defaults so that
+        # multiple CNNs can be loaded simultaneously
+        # See https://stackoverflow.com/a/51290092
+        g = Graph()
+        with g.as_default():
+            s = Session()
+            with s.as_default():
+                with loader(archive) as cnn:
+                    t1 = time()
+                    logger.debug('Loaded from archive %s, took %fs', filename, t1 - t0)
 
-            yield cnn
+                    yield cnn
 
     @classmethod
     @contextmanager
