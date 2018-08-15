@@ -125,17 +125,17 @@ def cnn_predict(model: str, domains: Tuple[str, ...], threshold: float):
     with CNN.load(filename=model) as cnn:
         prediction = cnn.predict(data=domains)
 
-        results = zip(domains, prediction.tolist())
+        results = zip(domains, prediction)
 
         if threshold is not None and threshold > 0:
             def func(i):
-                _, [p] = i
+                _, p = i
 
                 return p <= threshold
 
             results = filter(func, results)
 
-        for (d1, d2), [p] in results:
+        for (d1, d2), p in results:
             click.echo(f'{d1} ~ {d2} = {p}')
 
 

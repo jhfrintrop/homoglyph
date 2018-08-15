@@ -289,7 +289,7 @@ class CNN(object):
 
         return results
 
-    def predict(self, data: List[Tuple[str, str]], verbose: bool = False) -> List[List[float]]:
+    def predict(self, data: List[Tuple[str, str]], verbose: bool = False) -> List[float]:
         if not self.model:
             raise RuntimeError('Model is not set. You must train or load a model to predict.')
 
@@ -302,7 +302,10 @@ class CNN(object):
 
         prediction = self.model.predict([X1, X2], verbose=verbose)
 
-        return prediction
+        return [
+            p.item()  # Convert numpy.float32 to float
+            for [p] in prediction
+        ]
 
     def save(self, filename: str, version: int = None):
         if version is None:
