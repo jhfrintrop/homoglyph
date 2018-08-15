@@ -314,15 +314,15 @@ class CNN(object):
         logger.debug('Saving to archive %s, version %d', filename, version)
         t0 = time()
 
-        m = {
+        saver = {
             1: self._save_v1,
             2: self._save_v2,
         }.get(version, None)
 
-        if not m:
+        if not saver:
             raise NotImplementedError(f'Unknown version {version:d}')
 
-        m(filename)
+        saver(filename)
 
         t1 = time()
         logger.debug('Saved to archive %s, took %fs', filename, t1 - t0)
@@ -379,15 +379,15 @@ class CNN(object):
         archive = Archive(filename=filename)
         version = archive.version
 
-        m = {
+        loader = {
             1: cls._load_v1,
             2: cls._load_v2,
         }.get(version, None)
 
-        if not m:
+        if not loader:
             raise NotImplementedError(f'Unknown version {version:d}')
 
-        with m(archive) as cnn:
+        with loader(archive) as cnn:
             t1 = time()
             logger.debug('Loaded from archive %s, took %fs', filename, t1 - t0)
 
