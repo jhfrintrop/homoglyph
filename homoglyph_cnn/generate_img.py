@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
+from functools import lru_cache
 from typing import Tuple
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from PIL.ImageFont import FreeTypeFont
 
 
+@lru_cache(maxsize=32)
+def _load_font(font_location: str, font_size: int) -> FreeTypeFont:
+    return ImageFont.truetype(font=font_location, size=font_size)
+
+
+@lru_cache(maxsize=128)
 def generate_img(string: str, font_location: str, font_size: int, image_size: Tuple[int, int], text_location: Tuple[int, int]) -> np.ndarray:
     """
     Generates an image with the given text
@@ -26,9 +34,11 @@ def generate_img(string: str, font_location: str, font_size: int, image_size: Tu
     """
 
     # load font
-    font = ImageFont.truetype(font=font_location, size=font_size)
+    font = _load_font(font_location=font_location, font_size=font_size)
+
     # create image
     img = Image.new(mode='F', size=image_size)
+
     # draw text on image
     dimg = ImageDraw.Draw(im=img)
     dimg.text(xy=text_location, text=string.lower(), font=font)
