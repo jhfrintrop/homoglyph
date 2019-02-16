@@ -321,7 +321,7 @@ class CNN(object):
         }.get(version, None)
 
         if not saver:
-            raise NotImplementedError(f'Unknown version {version:d}')
+            raise NotImplementedError(f'Unknown version {version}')
 
         saver(filename)
 
@@ -386,7 +386,7 @@ class CNN(object):
         }.get(version, None)
 
         if not loader:
-            raise NotImplementedError(f'Unknown version {version:d}')
+            raise NotImplementedError(f'Unknown version {version}')
 
         # Load with a new Graph and a new Session as defaults so that
         # multiple CNNs can be loaded simultaneously

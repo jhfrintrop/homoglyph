@@ -84,7 +84,7 @@ class Archive(object):
         writer = self._writers.get(version, None)
 
         if not writer:
-            raise NotImplementedError(f'No writer registered for version {version:d}')
+            raise NotImplementedError(f'No writer registered for version {version}')
 
         kwargs['archive_filename'] = self.filename
         retval = writer(*args, **kwargs)
@@ -107,7 +107,7 @@ class Archive(object):
         reader = self._readers.get(version, None)
 
         if not reader:
-            raise NotImplementedError(f'No reader registered for version {version:d}')
+            raise NotImplementedError(f'No reader registered for version {version}')
 
         kwargs['archive_filename'] = self.filename
         return reader(*args, **kwargs)
